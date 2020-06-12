@@ -21,7 +21,7 @@ public class ZoneTable {
         titleName.add("起始");
         titleName.add("大小");
         titleName.add("状态");
-        titleName.add("作业");
+        titleName.add("作业名");
         this.size=size;
         // 初始化的时候清空table
         table.clear();

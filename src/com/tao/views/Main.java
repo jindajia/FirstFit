@@ -46,7 +46,7 @@ public class Main extends JFrame implements ActionListener {
         jb2 = new JButton("添加");
         jb2.addActionListener(this);
         jb2.setActionCommand("add");
-        jb3 = new JButton("删除");
+        jb3 = new JButton("释放");
         jb3.setActionCommand("remove");
         jb3.addActionListener(this);
         jl2 = new JLabel("作业名和大小");
@@ -68,7 +68,7 @@ public class Main extends JFrame implements ActionListener {
         getContentPane().add(jp1);
         this.setVisible(true);
         this.setSize(470, 500);
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {
@@ -79,6 +79,7 @@ public class Main extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("init")) {
         	alstr = jc1.getSelectedItem().toString();
+        	setTitle(alstr);
             String size = jtf1.getText();
             // 类型的强制转换
             zoneTable = new ZoneTable(Integer.valueOf(size));
