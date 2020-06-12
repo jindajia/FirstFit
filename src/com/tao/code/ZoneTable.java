@@ -7,15 +7,22 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 public class ZoneTable {
-    private List<Zone> table = new ArrayList<>(16);
+    private List<Zone> table = new ArrayList<>();
     private Vector<String> titleName = new Vector<>();
-
+    private int size;
+    public int getSize() {
+    	return size;
+    }
+    public List<Zone> getTable(){
+    	return table;
+    }
     public ZoneTable(int size) {
         titleName.add("区号");
         titleName.add("起始");
         titleName.add("大小");
         titleName.add("状态");
         titleName.add("作业");
+        this.size=size;
         // 初始化的时候清空table
         table.clear();
         table.add(Zone.init(size));
@@ -43,17 +50,34 @@ public class ZoneTable {
         if (no < 1 || no > table.size()) {
             return false;
         }
-        Zone target = table.get(no - 1);
+        
+        Zone target=null;
+        for(Zone z:table) {
+        	if(z.getNo()==no) {
+        		target = z;
+        		break;
+        	}
+        }
         if (!target.getState().equals(State.FREE)) {
             target.free();
             Zone pre = null;
             Zone next = null;
 
             if (no != 1) {
-                pre = table.get(no - 2);
+                for(Zone z:table) {
+                	if(z.getNo()==no-1) {
+                		pre = z;
+                		break;
+                	}
+                }
             }
             if (no != table.size()) {
-                next = table.get(no);
+                for(Zone z:table) {
+                	if(z.getNo()==no+1) {
+                		next = z;
+                		break;
+                	}
+                }
             }
             if (pre != null && pre.getState().equals(State.FREE)) {
                 pre.merge(target);
@@ -78,9 +102,9 @@ public class ZoneTable {
         }
     }
 
-    public void updateData(Vector data) {
-        table = table.stream().sorted(Comparator.comparing(Zone::getNo)).collect(Collectors.toList());
-        resetNo();
+    public void updateData(Vector data,String str) {
+    	table = table.stream().sorted(Comparator.comparing(Zone::getBegin)).collect(Collectors.toList());
+    	resetNo();
         data.clear();
         for (Zone zone : table) {
             Vector temp = new Vector();
@@ -88,17 +112,23 @@ public class ZoneTable {
             System.out.println(zone.getNo());
             temp.add(zone.getBegin());
             temp.add(zone.getSize());
-            temp.add(zone.getState().getState());
+            temp.add(zone.getState().toString());
             if (zone.getState().equals(State.BUSY)) {
                 temp.add(zone.getJob().getName());
             } else {
                 temp.add("无作业");
             }
-            System.out.println("no=" + zone.getNo() + "begin=" + zone.getBegin() + "size=" + zone.getSize() + "sate=" + zone.getState().getState());
+            System.out.println("no=" + zone.getNo() + "begin=" + zone.getBegin() + "size=" + zone.getSize() + "sate=" + zone.getState().toString());
             data.add(temp);
         }
-        System.out.println();
-        System.out.println();
+        if(str.compareTo("首次适应算法")==0)
+    		;
+    	else if(str.compareTo("最佳适应算法")==0)
+    		table = table.stream().sorted(Comparator.comparing(Zone::getSize)).collect(Collectors.toList());
+    	else if(str.compareTo("最坏适应算法")==0)
+    		table = table.stream().sorted(Comparator.comparing(Zone::getSize).reversed()).collect(Collectors.toList());
+        
+
     }
 
     public Vector<String> getTitleName() {

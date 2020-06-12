@@ -16,7 +16,7 @@ public enum State {
         return code;
     }
 
-    public String getState() {
+    public String toString() {
         return state;
     }
 }
